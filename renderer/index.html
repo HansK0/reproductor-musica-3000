@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+<head>
+
+    <meta charset="UTF-8">
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="
+            default-src 'self';
+            script-src 'self';
+            style-src 'self' 'unsafe-inline';
+            img-src 'self' data:;
+            object-src 'none';
+            base-uri 'self';
+        "
+    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Reproductor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- ===========================================================
+         BARRA SUPERIOR
+         =========================================================== -->
+    <header id="titleBar">
+        <div id="dragRegion">
+            <div id="appLogo">
+                <!-- Lucide: music -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                <span id="appTitle">
+                    Mi Reproductor
+                </span>
+            </div>
+            <nav id="menuBar">
+              <div class="menu">
+                  <button class="menuButton">
+                      Archivo
+                  </button>
+                  <div class="menuDropdown">
+                      <button id="addSong">
+                          Añadir Canciones
+                      </button>
+                      <button id="addFolder">
+                          Añadir Biblioteca
+                      </button>
+                  </div>
+              </div>
+          </nav>
+        </div>
+        <div id="windowControls">
+            <button
+                id="minimize"
+                class="windowButton"
+                title="Minimizar"
+            >
+                <!-- Lucide: minus -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+            </button>
+            <button
+                id="maximize"
+                class="windowButton"
+                title="Maximizar"
+            >
+                <!-- Lucide: square -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            </button>
+            <button
+                id="close"
+                class="windowButton close"
+                title="Cerrar"
+            >
+                <!-- Lucide: x -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ===========================================================
+         CONTENIDO
+         =========================================================== -->
+    <div id="layout">
+        <!-- =======================================================
+             CONTENIDO PRINCIPAL
+             ======================================================= -->
+        <main id="content">
+            <!-- ==========================================
+                 CABECERA
+                 ========================================== -->
+            <section id="libraryHeader">
+                <div>
+                    <h1>
+                        Toda la biblioteca
+                    </h1>
+                    <p>
+                        <span id="librarySongs">
+                            0
+                        </span>
+
+                        canciones
+
+                    </p>
+
+                </div>
+
+
+            </section>
+            <!-- ==========================================
+                 TABLA
+                 ========================================== -->
+
+            <section id="tableContainer">
+                <table>
+                    <thead>
+                        <tr>
+                            <!--<th>#</th>-->
+                            <th>Nombre</th>
+                            <th>Duración</th>
+                            <th>Extensión</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="songList">
+                        <!-- JS -->
+                    </tbody>
+                </table>
+
+                <div id="emptyState" class="empty-state" hidden>
+                    <!-- Lucide: music (reutilizado, mismo ícono que el logo, a mayor tamaño) -->
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    <strong>No tienes canciones cargadas</strong>
+                    <span class="hint">Ve a Archivo → Añadir Canciones o Añadir Biblioteca para empezar</span>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- ===========================================================
+         REPRODUCTOR
+         =========================================================== -->
+
+    <footer id="player">
+
+        <!-- =======================================
+             Información canción
+             ======================================= -->
+
+        <section id="songInfo">
+
+            <div id="cover">
+                <!-- Lucide: music -->
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div style="min-width: 0;">
+                <h2 id="titleCurrentSong">
+                    Ninguna canción seleccionada
+                </h2>
+                <p id="artistCurrentSong">
+                    Reproductor local
+                </p>
+            </div>
+        </section>
+
+        <!-- =======================================
+             Controles
+             ======================================= -->
+
+        <section id="playerCenter">
+            <div id="controls">
+                <button
+                    id="typeReproducer"
+                    data-value="shuffle"
+                    title="Aleatorio"
+                >
+                    <!-- Lucide: shuffle -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shuffle-icon lucide-shuffle"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></svg>
+                </button>
+                <button
+                    id="skipPrevious"
+                    title="Anterior"
+                >
+                    <!-- Lucide: skip-back -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"/><path d="M3 20V4"/></svg>
+                </button>
+                <button
+                    id="playPause"
+                    title="Reproducir"
+                >
+                    <!-- Lucide: play -->
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+                </button>
+                <button
+                    id="skipNext"
+                    title="Siguiente"
+                >
+                    <!-- Lucide: skip-forward -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4v16"/><path d="M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z"/></svg>
+                </button>
+                <button
+                    id="loop"
+                    title="Repetir"
+                >
+                    <!-- Lucide: repeat -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat-icon lucide-repeat"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+                </button>
+            </div>
+
+            <div id="progressContainer">
+                <span
+                    id="currentTime" class="timer"
+                >
+                    0:00
+                </span>
+                <input
+                    id="progress"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="0"
+                >
+                <span
+                    id="totalTime" class="timer"
+                >
+                    0:00
+                </span>
+            </div>
+        </section>
+
+        <!-- =======================================
+             Volumen
+             ======================================= -->
+
+        <section id="volumeContainer">
+            <span id="iconVolume">
+                <!-- Lucide: volume-2 -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+            </span>
+            <input
+                id="volume"
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+            >
+        </section>
+    </footer>
+
+
+    <!-- =======================================
+             Opciones
+    ======================================= -->
+    <div id="contextMenu" class="context-menu">
+        <button id="deleteSong">
+            <!-- Lucide: trash-2 -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Eliminar canción
+        </button>
+    </div>
+
+    <!-- =======================================
+             Toast
+    ======================================= -->
+    <div id="toast" class="toast" hidden></div>
+
+    <script defer src="renderer.js"></script>
+
+</body>
+</html>
