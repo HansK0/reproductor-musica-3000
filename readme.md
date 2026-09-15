@@ -12,7 +12,6 @@ Reproductor de música de escritorio, local y sin conexión, construido con Elec
 - [Estructura de carpetas](#-estructura-de-carpetas)
 - [Instalación y uso](#-instalación-y-uso)
 - [Contribuciones](#-contribuciones)
-- [Licencia](#-licencia)
 
 ---
 
@@ -123,9 +122,3 @@ npm run dev
 ### Reportar un bug
 
 Abre un [issue](../../issues/new) incluyendo: pasos para reproducirlo, qué esperabas que pasara vs. qué pasó realmente, tu sistema operativo, y capturas o logs de consola si aplica.
-
----
-
-## 📄 Licencia
-
-Este proyecto está bajo la licencia MIT — consulta el archivo [`LICENSE`](./LICENSE) para más detalles.
